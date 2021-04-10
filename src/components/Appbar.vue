@@ -13,8 +13,5 @@ v-app-bar(app, color="primary", dark)
 <script>
 export default {
   name: "Appbar",
-  data: () => ({
-    //
-  }),
 };
 </script>

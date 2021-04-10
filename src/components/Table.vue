@@ -4,13 +4,18 @@ v-container
     :headers="headers",
     :items="costCenters",
     :items-per-page="5",
-    item-key="name",
+    item-key="id",
     :footer-props={
       showFirstLastPage: true
     },
     :loading="loading",
     loading-text="Loading..."
+    class="cost-centers-table"
   )
+
+    template(v-slot:item.actions="{item}")
+      v-btn(fab)
+        v-icon mdi-pencil-outline
 
     template(v-slot:top)
       v-toolbar(flat)
@@ -19,7 +24,7 @@ v-container
         v-dialog(v-model="dialog" max-width="405px")
           template(v-slot:activator="{on, attrs}")
             v-hover(v-slot="{hover}")
-              v-btn(rounded outlined  v-bind="attrs" v-on="on" :class="`${hover ? 'blue darken-2 white--text' : 'blue--text text--darken-2'}`").text-none.mb-2 + Add new
+              v-btn(rounded outlined v-bind="attrs" v-on="on" :class="`${hover ? 'blue darken-2 white--text' : 'blue--text text--darken-2'}`").text-none.mb-2 + Add new
           v-card
             .text-right.pt-3.pr-3
               v-btn(icon small @click="close")
@@ -36,7 +41,7 @@ v-container
                     label(for="companyId").grey--text.px-2 Company ID
                   v-text-field(placeholder="Insert CC" outlined single-line v-model="companyId")#companyId
                   .text-center
-                    v-btn(rounded depressed type="submit").text-none.px-9 Save
+                    v-btn(rounded depressed color="secondary" type="submit" :disabled="canSubmit").text-none.px-9 Save  
 </template>
 
 <script>
@@ -46,7 +51,7 @@ import { api } from "../config";
 const { url, token } = api;
 const options = {
   headers: {
-    Authorization: `Bearer ${token}`
+    Authorization: `Bearer ${token}`,
   },
 };
 
@@ -63,83 +68,66 @@ export default {
       },
       { text: "Name", value: "name" },
       { text: "Company ID", value: "company_id" },
-      { text: "Options" },
+      { text: "Actions", value: "actions", sortable: false },
     ],
 
     dialog: false,
     dialogDelete: false,
 
     ccName: "",
-    companyId: null,
+    companyId: "",
   }),
 
   watch: {
     dialog(val) {
       val || this.close();
     },
-
-    // dialogDelete(val) {
-    //   val || this.closeDelete();
-    // },
   },
 
   methods: {
     submit() {
-      console.log("ccName", this.ccName);
-      console.log("companyId", this.companyId);
-
       let data = new FormData();
       data.append("name", this.ccName);
       data.append("company_id", this.companyId);
 
-      console.log(data);
-      for (var key of data.entries()) {
-        console.log(key[0] + ", " + key[1]);
-      }
-
       axios
-        .post(url, data, 
-        {...options, headers: {...options.headers, "Content-Type": "multipart/form-data"}}
-        )
+        .post(url, data, {
+          ...options,
+          headers: {
+            ...options.headers,
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then((res) => {
-          // console.log(res.data.data.table);
-          // this.costCenters = res.data.data.table;
-          console.log(res.data.data);
-          this.costCenters.push(res.data.data)
+          this.costCenters.push(res.data.data);
+          this.$emit("toggle-snackbar", `${this.ccName} has been created!`);
+          this.close();
         })
         .catch((err) => {
           console.error(err.response);
-        })
-      .finally(() => {
-        console.log(options);
-        console.log({...options, headers: {...options.headers, "Content-Type": "multipart/form-data"}});
-      })
+        });
     },
 
     close() {
       this.dialog = false;
       this.ccName = "";
       this.companyId = "";
-      // this.$nextTick(() => {
-      //   //
-      // });
     },
+  },
 
-    // closeDelete() {
-    //   this.dialogDelete = false;
-    //   this.$nextTick(() => {
-    //     //
-    //   });
-    // },
+  computed: {
+    canSubmit() {
+      return (
+        this.ccName.trim().length === 0 || this.companyId.trim().length === 0
+      );
+    },
   },
 
   mounted() {
     axios
       .get(url, options)
       .then((res) => {
-        // console.log(res.data.data.table);
         this.costCenters = res.data.data.table;
-        console.log(this.costCenters)
       })
       .catch((err) => {
         console.error(err);
@@ -159,3 +147,52 @@ export default {
   // },
 };
 </script>
+
+<style lang="sass" scoped>
+@media (min-width: 600px)
+  ::v-deep
+    .theme--light
+      &.v-data-table
+        .v-data-footer
+          border-top: none
+
+    .cost-centers-table
+      .v-data-table__wrapper,
+      .v-data-footer
+        flex: 0 0 70%
+        max-width: 70%
+        margin-left: auto
+        margin-right: auto
+
+      thead
+        th
+          width: 20%
+
+          &:nth-child(2)
+            width: 40%
+
+      table
+        border-collapse: collapse
+
+      tr:nth-child(even)
+        background-color: #eeeeee
+
+      td,
+      th
+        border: 1px solid #dddddd
+
+      .v-data-table-header__icon
+        opacity: 1
+        float: right
+
+      .v-btn--fab.v-size--default
+        background-color: #fff
+        width: 28px
+        height: 28px
+        color: #7dbed0
+
+        .v-icon
+          height: 20px
+          font-size: 20px
+          width: 20px
+</style>

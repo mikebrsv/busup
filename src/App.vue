@@ -3,7 +3,11 @@ v-app
   Appbar
 
   v-main
-    Table
+    Table(@toggle-snackbar="toggleSnackbar")
+
+    v-snackbar(v-model="showSnackbar", :timeout="snackbarTimeout") {{ typeof snackbarText === 'string' && snackbarText }}
+      template(v-slot:action="{ attrs }")
+        v-btn(color="blue", text, @click="showSnackbar = false") Close
 </template>
 
 <script>
@@ -19,7 +23,16 @@ export default {
   },
 
   data: () => ({
-    //
+    showSnackbar: false,
+    snackbarTimeout: 2000,
+    snackbarText: "",
   }),
+
+  methods: {
+    toggleSnackbar(snackbarText) {
+      this.showSnackbar = !this.showSnackbar;
+      this.snackbarText = snackbarText;
+    },
+  },
 };
 </script>
