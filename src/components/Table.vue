@@ -72,7 +72,6 @@ export default {
     ],
 
     dialog: false,
-    dialogDelete: false,
 
     ccName: "",
     companyId: "",
@@ -123,28 +122,28 @@ export default {
     },
   },
 
-  // mounted() {
-  //   axios
-  //     .get(url, options)
-  //     .then((res) => {
-  //       this.costCenters = res.data.data.table;
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     })
-  //     .finally(() => (this.loading = false));
-  // },
-
-  async mounted() {
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      this.costCenters = await data.data.table;
-    } catch (err) {
-      console.error(err);
-    }
-    this.loading = false
+  mounted() {
+    axios
+      .get(url, options)
+      .then((res) => {
+        this.costCenters = res.data.data.table;
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => (this.loading = false));
   },
+
+  // async mounted() {
+  //   try {
+  //     const response = await fetch(url, options);
+  //     const data = await response.json();
+  //     this.costCenters = await data.data.table;
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  //   this.loading = false
+  // },
 };
 </script>
 
