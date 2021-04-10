@@ -41,7 +41,7 @@ v-container
                     label(for="companyId").grey--text.px-2 Company ID
                   v-text-field(placeholder="Insert CC" outlined single-line v-model="companyId")#companyId
                   .text-center
-                    v-btn(rounded depressed color="secondary" type="submit" :disabled="canSubmit").text-none.px-9 Save  
+                    v-btn(rounded depressed color="secondary" type="submit" v-bind:disabled="canSubmit").text-none.px-9 Save  
 </template>
 
 <script>
