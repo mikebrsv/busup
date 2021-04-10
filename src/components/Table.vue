@@ -26,13 +26,13 @@ v-container
             v-hover(v-slot="{hover}")
               v-btn(rounded outlined v-bind="attrs" v-on="on" :class="hover ? 'blue darken-2 white--text' : 'blue--text text--darken-2'").text-none.mb-2 + Add new
           v-card
-            .text-right.pt-3.pr-3
+            .text-right.pt-2.pr-2.pt-sm-3.pr-sm-3
               v-btn(icon small @click="closeModal")
                 v-icon mdi-close
             v-container.pt-0
-              v-card-title.pt-0.px-7.pb-7
+              v-card-title.pt-0.px-2.px-sm-7.pb-sm-7
                 span.headline.font-weight-medium Create new
-              v-card-text.px-8.pb-7
+              v-card-text.px-2.pb-2.px-sm-8.pb-sm-7
                 v-form(@submit.prevent="submit")
                   .mb-2
                     label(for="ccName").grey--text.px-2 CC Name
