@@ -19,7 +19,7 @@ v-container
 
     template(v-slot:top)
       v-toolbar(flat)
-        v-toolbar-title.font-weight-medium Cost Center - AICA
+        v-toolbar-title.font-weight-medium Cost Center
         v-spacer
         v-dialog(v-model="dialog" max-width="405px")
           template(v-slot:activator="{on, attrs}")
@@ -27,7 +27,7 @@ v-container
               v-btn(rounded outlined v-bind="attrs" v-on="on" :class="`${hover ? 'blue darken-2 white--text' : 'blue--text text--darken-2'}`").text-none.mb-2 + Add new
           v-card
             .text-right.pt-3.pr-3
-              v-btn(icon small @click="close")
+              v-btn(icon small @click="closeModal")
                 v-icon mdi-close
             v-container.pt-0
               v-card-title.pt-0.px-7.pb-7
@@ -80,7 +80,7 @@ export default {
 
   watch: {
     dialog(val) {
-      val || this.close();
+      val || this.closeModal();
     },
   },
 
@@ -101,14 +101,14 @@ export default {
         .then((res) => {
           this.costCenters.push(res.data.data);
           this.$emit("toggle-snackbar", `${this.ccName} has been created!`);
-          this.close();
+          this.closeModal();
         })
         .catch((err) => {
           console.error(err.response);
         });
     },
 
-    close() {
+    closeModal() {
       this.dialog = false;
       this.ccName = "";
       this.companyId = "";
@@ -123,28 +123,28 @@ export default {
     },
   },
 
-  mounted() {
-    axios
-      .get(url, options)
-      .then((res) => {
-        this.costCenters = res.data.data.table;
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-      .finally(() => (this.loading = false));
-  },
-
-  // async mounted() {
-  //   try {
-  //     const response = await fetch(url, options);
-  //     const data = await response.json();
-  //     this.costCenters = await data.data.table;
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  //   this.loading = false
+  // mounted() {
+  //   axios
+  //     .get(url, options)
+  //     .then((res) => {
+  //       this.costCenters = res.data.data.table;
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     })
+  //     .finally(() => (this.loading = false));
   // },
+
+  async mounted() {
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+      this.costCenters = await data.data.table;
+    } catch (err) {
+      console.error(err);
+    }
+    this.loading = false
+  },
 };
 </script>
 
