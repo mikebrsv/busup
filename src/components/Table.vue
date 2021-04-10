@@ -148,6 +148,19 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+::v-deep
+  .cost-centers-table
+    .v-btn--fab.v-size--default
+      background-color: #fff
+      width: 28px
+      height: 28px
+      color: #7dbed0
+
+      .v-icon
+        height: 20px
+        font-size: 20px
+        width: 20px
+
 @media (min-width: 600px)
   ::v-deep
     .theme--light
@@ -183,15 +196,4 @@ export default {
       .v-data-table-header__icon
         opacity: 1
         float: right
-
-      .v-btn--fab.v-size--default
-        background-color: #fff
-        width: 28px
-        height: 28px
-        color: #7dbed0
-
-        .v-icon
-          height: 20px
-          font-size: 20px
-          width: 20px
 </style>
