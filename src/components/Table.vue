@@ -24,7 +24,7 @@ v-container
         v-dialog(v-model="dialog" max-width="405px")
           template(v-slot:activator="{on, attrs}")
             v-hover(v-slot="{hover}")
-              v-btn(rounded outlined v-bind="attrs" v-on="on" :class="hover ? 'blue darken-2 white--text' : 'blue--text text--darken-2'").text-none.mb-2 + Add new
+              v-btn(rounded outlined v-bind="attrs" v-on="on" v-bind:class="hover ? 'blue darken-2 white--text' : 'blue--text text--darken-2'").text-none.mb-2 + Add new
           v-card
             .text-right.pt-3.pr-3
               v-btn(icon small @click="closeModal")
